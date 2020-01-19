@@ -12,7 +12,9 @@ app.register_blueprint(yr1_addition, url_prefix="/year1")
 
 @app.route("/")
 def load_base_view():
-    return render_template("base.html", msg="Hello, World!!!!!!!!!!")
+    return render_template(
+            "base.html", 
+            msg="Hello, World!!!!!!!!!!")
 
 if __name__ == "__main__":
         app.run(debug=True)

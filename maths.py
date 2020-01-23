@@ -3,35 +3,58 @@
 
 from random import randint
 
-def get_simple_addition(max_x=10, max_y=10):
+def get_simple_addition(x_range=(0, 10), y_range=(0, 10)):
     """
     Generate the number of an addition problem: x + y = z .
     Return a dict with keys: operator, x, y, z
 
     args:
-        max_x: (int) max allowable x
-        max_y: (int) max allowable y
+        x_range: (list like) min and max allowable x
+        y_range: (list like) min and max allowable y
     """
-    x = randint(0, max_x)
-    y = randint(0, max_y)
+    x = randint(*x_range)
+    y = randint(*y_range)
     z = x + y
     return ("+", x, y, z)
 
-def get_simple_subtraction(max_x=100, max_y=10):
+def get_simple_subtraction(x_range=(10, 50), y_range=(0, 10)):
     """
     Generate the number of an subtraction problem: x - y = z .
     Return a dict with keys: operator, x, y, z
 
     args:
-        max_x: (int) max allowable x
-        max_y: (int) max allowable y
+        x_range: (list like) min and max allowable x
+        y_range: (list like) min and max allowable y
     """
-    y = randint(0, max_y)
-    x = max(y, randint(0, max_x))
+    y = randint(*y_range)
+    x = max(y, randint(*x_range))
     z = x - y
     return ("-", x, y, z)
 
-def make_simple_sentance(operator, x, y, z, solve_for="random"):
+def get_number_bond(z=10):
+    """
+    Return number bond adding up to answer
+
+    args:
+        z: (int) x and y to add up to z
+    """
+    x = randint(0, z)
+    y = z - x
+    return ("+", x, y, z)
+
+def get_tens_partition(z_range=(11,100)):
+    """
+    Partitions a number, z, into x + y, where x is a multiple of 10.
+
+    args:
+        z_range: (list like) min and max allowable z
+    """
+    z = randint(*z_range)
+    x = 10 * randint(int(round(z/10,0))-1)
+    y = z - x
+    return ("+", x, y, z)
+
+def make_simple_sentance(operator, x, y, z, solve_for=("x", "y", "z"), line_break=True):
     """
     return string in the format "x + y = z"
 
@@ -40,14 +63,21 @@ def make_simple_sentance(operator, x, y, z, solve_for="random"):
         x: (number)
         y: (number)
         z: (number)
-        solve_for: (str) "x"|"y"|"z"|"random"
+        solve_for: (list like) values must be "x"|"y"|"z". Determines which number to solve for.
+                   If multiple values are supplied, one will be randomly chosen
+        line_break: (bool) If True, add a line break at the end of the sentance           
     """
-    if solve_for == "random":
-        solve_for = ("x", "y", "z")[randint(0,2)]
+    if type(solve_for) == str:
+        solve_for = list(solve_for)
+    solve_for = solve_for[randint(0, len(solve_for)-1)]    
     if solve_for == "z":
         sentance = "{} {} {} = ___".format(x, operator, y)
     elif solve_for == "x":
         sentance = "___ {} {} = {}".format(operator, y, z)
     elif solve_for == "y":
         sentance = "{} {} ___ = {}".format(x, operator, z)
+    if line_break:
+        sentance = "{}\n".format(sentance)
     return sentance
+
+
